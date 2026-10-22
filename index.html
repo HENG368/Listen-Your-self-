@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Listen Your Self</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 2rem;
+      }
+      .status {
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Listen Your Self</h1>
+    <p>Import and play music from your local device only.</p>
+
+    <input id="musicFile" type="file" accept="audio/*" />
+    <div class="status" id="status" aria-live="polite"></div>
+    <audio id="player" controls style="display: none; margin-top: 1rem"></audio>
+
+    <script>
+      const input = document.getElementById("musicFile");
+      const status = document.getElementById("status");
+      const player = document.getElementById("player");
+
+      input.addEventListener("change", (event) => {
+        const file = event.target.files && event.target.files[0];
+        if (!file) {
+          status.textContent = "No file selected.";
+          player.style.display = "none";
+          player.removeAttribute("src");
+          return;
+        }
+
+        const isAudioType = file.type.startsWith("audio/");
+        const isAudioByExtension = /\.(mp3|wav|ogg|m4a|flac|aac)$/i.test(file.name);
+        if (!isAudioType && !isAudioByExtension) {
+          status.textContent = "Only local audio files are allowed.";
+          event.target.value = "";
+          player.style.display = "none";
+          player.removeAttribute("src");
+          return;
+        }
+
+        const objectUrl = URL.createObjectURL(file);
+        player.src = objectUrl;
+        player.style.display = "block";
+        status.textContent = `Loaded local file: ${file.name}`;
+      });
+    </script>
+  </body>
+</html>
