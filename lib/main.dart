@@ -4,7 +4,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
-import '../screen/home_Screen.dart';
+import 'screen/home_screen.dart';
 
 import 'model/song.dart';
 import 'screen/player_screen.dart';
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     const accent = Color(0xFF9B5CFF);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Listen Your Self',
+      title: 'Music',
       theme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF09090D),

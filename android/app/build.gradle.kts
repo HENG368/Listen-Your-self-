@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.listen_your_self"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

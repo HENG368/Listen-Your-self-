@@ -7,17 +7,19 @@ import '../main.dart';
 import '../model/song.dart';
 import '../screen/player_screen.dart';
 
-
-
 class MyHomePageState extends State<MyHomePage> {
   final AudioPlayer _player = AudioPlayer();
   final TextEditingController _searchController = TextEditingController();
   final List<Song> _songs = [];
+  static const _bundledSongs = [
+    'assets/Audio/ABBA_Lay_All_Your_Love_On_Me_Official_Lyric_VideoM4A_128K.m4a',
+    'assets/Audio/Maroon 5 - Sunday Morning(M4A_128K).m4a',
+    'assets/Audio/Maroon_5_Won_t_Go_Home_Without_You_Official_Music_VideoM4A_128K.m4a',
+  ];
 
   String _searchQuery = '';
   Song? _currentSong;
   String? _errorMessage;
-
   List<Song> get _filteredSongs {
     final query = _searchQuery.trim().toLowerCase();
     if (query.isEmpty) {
@@ -49,6 +51,9 @@ class MyHomePageState extends State<MyHomePage> {
     }
     setState(() {
       _songs.addAll(
+        _bundledSongs.map((path) => Song(path: path, title: _titleFor(path))),
+      );
+      _songs.addAll(
         paths.map(
           (path) => Song(
             path: path,
@@ -64,7 +69,9 @@ class MyHomePageState extends State<MyHomePage> {
       _errorMessage = null;
     });
     try {
+      // List<PlatformFile> songs = [];
       final result = await FilePicker.pickFiles(type: FileType.audio);
+      // final result = await FilePicker.pickFiles(type: FileType.audio);
       if (result.isEmpty) {
         return;
       }
@@ -97,13 +104,14 @@ class MyHomePageState extends State<MyHomePage> {
 
   Future<void> _playSong(Song song) async {
     try {
-      if (_currentSong?.path != song.path) {
-        await _player.setFilePath(song.path);
-        if (mounted) {
-          setState(() => _currentSong = song);
-        }
-      }
+      setState(()  {
+        _currentSong = song;
+        _errorMessage = null;
+      });
+      await _player.stop();
+      await _player.setFilePath(song.path);
       await _player.play();
+      
     } on Exception catch (error) {
       if (mounted) {
         setState(
